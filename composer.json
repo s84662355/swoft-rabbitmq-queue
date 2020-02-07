@@ -1,0 +1,30 @@
+{
+  "name": "chenjiahao/swoft-rabbitmq-queue",
+  "type": "library",
+  "version": "v1.0.0",
+  "keywords": [
+    "php",
+    "swoole",
+    "swoft",
+    "rabbitmq",
+    "queue",
+  ],
+  "description": "swoft  rabbitmq   swoft框架的 rabbitmq 队列实现 ",
+  "license": "Apache-2.0",
+  "require": {
+    "swoft/framework": "~2.0.0",
+    "swoft/connection-pool": "~2.0.0",
+    "php-amqplib/php-amqplib":"*",
+    "chenjiahao/swoft-rabbitmq-pool":"*",
+    "chenjiahao/new-rabbitmq":"*"
+  },
+  "autoload": {
+    "classmap": [
+    ],
+    "psr-4": {
+      "cjhswoftRabbitmqQueue\\": "src/"
+    },
+    "files": [
+    ]
+  }
+}
