@@ -7,7 +7,7 @@
     "swoole",
     "swoft",
     "rabbitmq",
-    "queue",
+    "queue"
   ],
   "description": "swoft  rabbitmq   swoft框架的 rabbitmq 队列实现 ",
   "license": "Apache-2.0",
