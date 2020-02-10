@@ -20,6 +20,19 @@ class QueueController
      */ 
     private $rabbitmq_pool = 'rabbitmq.pool';
 
+    /**
+     * @var string
+     */ 
+    private $connection_name = 'default' ;
+
+
+    /**
+     * @var array
+     */ 
+    private $config  ; 
+
+
+
     private $queue_driver = null ;
 
     private function getDriver()
@@ -29,7 +42,7 @@ class QueueController
              return $this->queue_driver;
          }
          
-         $this->queue_driver = Rabbitmq::connection($this->rabbitmq_pool);
+         $this->queue_driver =  new QueueDriver( Rabbitmq::connection($this->rabbitmq_pool),$this->connection_name,$this->config ) ;
          return $this->queue_driver ;
     }
 

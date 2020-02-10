@@ -1,33 +1,54 @@
-swoft框架的 rabbitmq 连接池 
+swoft框架 用rabbitmq实现队列
 
-composer require chenjiahao/swoft-rabbitmq-pool
+有普通的队列，延迟队列
+生产者配置
 
+            'rabbitmq-queue-producer' => [
+                'class' => Producer::class,
+                'rabbitmq_pool' => 'rabbitmq.pool',
+                'connection_name' => 'default',
+                'default_config'  => 'default',
+                '__option' => [
+                    'scope' => Bean::REQUEST
+                ],
+                'config'  => [
 
-            'rabbitmq-config'      => [
-                'class'    => RabbitmqConfig::class, //   /cjhswoftRabbitmq/RabbitmqConfig::class
-                'host'     => '127.0.0.1',
-                'port'     => 5672,
-                'vhost'    => '/',
-                'username' => 'guest',
-                'password' => 'guest',
-             
-            ],
+                    '1' => [
+                        'durable' => true,
+                        'delayed' => true,
+                        'queue' => [
 
-
-            'rabbitmq.pool' => [
-                'class'   => Pool::class, //   /cjhswoftRabbitmq/Pool::class
-                'rabbitmqConfig' => bean('rabbitmq-config'),
-                'mark'  => 'rabbitmq_pool', //连接池的唯一标识符，必须唯一 ， 不能重复
-                'minActive'   => 10,
-                'maxActive'   => 20,
-                'maxWait'     => 0,
-                'maxWaitTime' => 0,
-                'maxIdleTime' => 40,
-            ]
+                            'name' => 'aaaaa423',
+                        ]
+                    ],
 
 
+                    '2' => [
+                        'durable' => true,
+                        'exchange' => [
+                            'name' => '22222',
+                            'type' => 'direct',
+                            'durable' => true,
+                            'routing_key' => '2222',
+                        ],
+                        'queue' => [
+                            'durable' => true,
+                            'name' => '',
+                        ]
+                    ],
 
-使用::
+                    '3' => [
 
-获取连接
-\cjhswoftRabbitmq\Rabbitmq::connection(string $pool =  'rabbitmq.pool' )
+                        'durable' => true,
+                        'delayed' => true,
+                        'queue' => [
+                            'durable' => true,
+                            'name' => '1111',
+
+                        ]
+                    ],
+
+
+                ],
+            ],  
+ 
