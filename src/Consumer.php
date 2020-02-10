@@ -228,20 +228,48 @@ class Consumer {
 
         if(!empty($config['timedelay'])){
 
-             $this->driver->exchange(
+            $this->driver->exchange(
                 'dead-exchange',
                 'direct' ,
                 true);
 
-             $this->driver->cache_queue(
+            $this->driver->cache_queue(
+                $config['queue'],
+                true ,
+                'dead-exchange',
+                'dead_'.$config['queue'].'_key',
+                 intval($config['timedelay'])
+            );
+             
+
+            $this->driver->queue
+            (
+                'cache_'.$config['queue'],
+                $config['durable'],
+                $config['arguments']
+            );
+
+             $this->driver->QueueBind(
+                'cache_'.$config['queue'],
+                'dead-exchange',
+                'dead_'.$config['queue'].'_key'
+            );
+
+             $this->queue =  'cache_'.$config['queue'];
+
+
+
+            /*
+            $this->driver->cache_queue(
                 'cache_'.$config['queue'],
                 true ,
                 'dead-exchange',
                 'dead_'.$config['queue'].'_key',
                  intval($config['timedelay'])
             );
+             
 
-             $this->driver->queue
+            $this->driver->queue
             (
                 $config['queue'],
                 $config['durable'],
@@ -253,6 +281,7 @@ class Consumer {
                 'dead-exchange',
                 'dead_'.$config['queue'].'_key'
             );
+            */
         }else{
              $this->driver->queue
             (

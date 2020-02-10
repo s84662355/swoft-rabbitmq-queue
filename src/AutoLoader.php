@@ -42,13 +42,7 @@ class AutoLoader extends SwoftComponent
     public function beans(): array
     {
         return [
-            'rabbitmq-queue-controller'      => [
-                'class'          => QueueController::class,
-                'rabbitmq_pool'  => 'rabbitmq.pool',
-                '__option' => [
-                    'scope' => Bean::REQUEST
-                ],
-            ],
+ 
 
             'rabbitmq-queue-producer' => [
                 'class' => Producer::class,
@@ -80,7 +74,7 @@ class AutoLoader extends SwoftComponent
                         ],
                         'queue' => [
                             'durable' => true,
-                            'name' => '',
+                            'name' => '2222',
                         ]
                     ],
 

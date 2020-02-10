@@ -48,25 +48,29 @@ class  Producer extends AbstractClient {
     public function message(string $body, array $config , MQPublisher $publisher)
     {
         $msg_config = [];
+        /*
         if(!empty($config['delayed']))
         {
 
              $msg_config['queue'] = 'cache_'.$config['queue']['name'];
-        }else if(!empty($config['exchange'])){
+        }else 
+        */
+
+        if(!empty($config['exchange'])){
 
 
-            //// $this->exchange($config['exchange']['name'], $config['exchange']['type']  );
+            $this->getDriver()->exchange($config['exchange']['name'], $config['exchange']['type']  );
             #####################
            /// 交换机需要提前创建，代码里面不创建交换机
             #####################
 
-            /*
-            $this->QueueBind(
+            
+            $this->getDriver()->QueueBind(
                 $config['queue']['name'],
                 $config['exchange']['name'],
                   $config['exchange']['routing_key']
             );
-            */
+         
 
             $msg_config = [
                'routing_key' => $config['exchange']['routing_key'],
