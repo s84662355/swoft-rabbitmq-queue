@@ -127,7 +127,7 @@ class Consumer {
                     return   $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
                 }
                 $this->redis->expire($message_key, 200);
-                $this->callback->message_id = $body['message_id'];
+               /////////// $this->callback->message_id = $body['message_id'];
 
             }
 
