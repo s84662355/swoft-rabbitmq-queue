@@ -5,7 +5,6 @@ namespace cjhswoftRabbitmqQueue;
 use App\Model\Entity\User;
 use Swoft\Db\Exception\DbException;
 use Swoft\Log\Helper\CLog;
-use Swoft\Process\Annotation\Mapping\Process;
 use Swoft\Process\Contract\ProcessInterface;
 use Swoft\Redis\Redis;
 use Swoole\Coroutine;
@@ -17,15 +16,16 @@ use Swoft\Bean\BeanFactory;
 use Swoft;
 use cjhswoftRabbitmq\Rabbitmq ;
 use Swoft\Redis\Redis as SwoftRedis;
-
+use Swoft\Process\UserProcess;
+use Swoft\Process\Process;
 
 /**
- * Class  AbstractProcess 
+ * Class  AbstractUserProcess
  *
  * @since 2.0
  *
  */
-abstract class  AbstractProcess  implements ProcessInterface{
+abstract class  AbstractUserProcess extends UserProcess{
 
     /**
      * @var string
@@ -71,6 +71,8 @@ abstract class  AbstractProcess  implements ProcessInterface{
 
     protected $coroutine_count = 1;
 
+    public  $process;
+
 
 	abstract public function process_message($body,$config,$msgid) ;
 
@@ -80,29 +82,27 @@ abstract class  AbstractProcess  implements ProcessInterface{
 
 
     /**
-     * @param Pool $pool
-     * @param int  $workerId
+     * @param Process $process
+     *
      */
-    public function run(Pool $pool, int $workerId): void
+    public function run(Process $process): void
     {
+        $this->process = $process;
        
         \Swoole\Runtime::enableCoroutine(true);
-
-        $this->pool = $pool;
-        $this->workerId = $workerId;
 
         $that = $this;
 
 
         for ($i=0; $i < $this->coroutine_count ; $i++) { 
             Co::create(function () use ($that){
-                $that->createConsumer();
+                  $that->createConsumer();
             });
         }
 
         while(true){
             sleep(5);
-            CLog::info(  "  rabbitmq queue master  Coroutine , workid ".$workerId );
+            CLog::info( "  rabbitmq queue UserProcess master  Coroutine   " );
         }
  
     }
@@ -114,6 +114,7 @@ abstract class  AbstractProcess  implements ProcessInterface{
         if(!empty($this->redis_pool)){
            $consumer->setRedisCounter(  SwoftRedis::connection($this->redis_pool) ,$this->connection_name ,$this->max_count  );
         }
+
 
         $consumer->init_consume( $this->queue_config);
         $consumer-> basic_consume($this);

@@ -131,7 +131,7 @@ class Consumer {
 
             }
 
-            $res = call_user_func_array([$this->callback,'process_message'],[ $body_data,$body['config']]);
+            $res = call_user_func_array([$this->callback,'process_message'],[ $body_data, $body['config'] , $body['message_id'] ]);
             if(empty($res))
                 $res =  AckStatus::REJECT_OUT;
 
@@ -141,7 +141,7 @@ class Consumer {
         {
            // $log_str.=$this->ErrorLog($e);
 
-            $res = call_user_func_array([$this->callback,'error'],[ $body_data,$body['config'],$e]);
+            $res = call_user_func_array([$this->callback,'error'],[ $body_data,$body['config'],$body['message_id'],$e]);
 
             if(empty($res ))
                 $res =  AckStatus::REJECT;

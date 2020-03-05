@@ -54,12 +54,9 @@ class AutoLoader extends SwoftComponent
                 ],
                 'config'  => [
 
-                    '1' => [
-                        'durable' => true,
-                        'delayed' => true,
+                    '1' => [ 
                         'queue' => [
-
-                            'name' => 'aaaaa423',
+                            'name' =>  '33333',
                         ]
                     ],
 
