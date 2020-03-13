@@ -109,14 +109,14 @@ class Consumer {
 
         $res = AckStatus::ACK;
         $log_str = '  ';
+        $body = $msg->getBody();
 
+        $body = json_decode($body,true);
+
+        $body_data =  base64_decode($body['body']);
+        $log_str.= $body_data;
         try{
-            $body = $msg->getBody();
-
-            $body = json_decode($body,true);
-
-            $body_data =  base64_decode($body['body']);
-            $log_str.= $body_data;
+ 
 
 
 
@@ -160,7 +160,7 @@ class Consumer {
         }catch (Throwable $e)
         {
            // $log_str.=$this->ErrorLog($e);
-
+ 
             $res = call_user_func_array([$this->callback,'error'],[ $body_data,$body['config'],$body['message_id'],$e]);
 
             if(empty($res ))
