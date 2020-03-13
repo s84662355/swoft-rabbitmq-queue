@@ -12,5 +12,7 @@ class AckStatus{
 	const REJECT_OUT = 500;//拒绝 并且出列
 	const RECOVERTRUE = 600;//回列 发送给新的consume
 	const RECOVERFALSE = 700;//回列 发送给相同的consumer
+	const BACK_TO_TAIL = 800;
+
  
 }

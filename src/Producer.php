@@ -10,7 +10,16 @@ use CJHRabbitmq\MQPublisher;
 use CJHRabbitmq\MQMessage;
 use Closure;
 class  Producer extends AbstractClient {
- 
+
+    public function setDriver( QueueDriver $driver)
+    {
+         $this->driver = $driver;
+    }
+
+    public function setConfig(array $config)
+    {
+         $this->config = $config;
+    }
 
 
     public function send(string $body,string $msg_driver_name ,  $confirm = true)

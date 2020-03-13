@@ -38,6 +38,8 @@ class Consumer {
 
     public $driver ;
 
+    public $producer ;
+
     /**
      *
      * @param array $items
@@ -58,6 +60,13 @@ class Consumer {
 
           $self->driver->setReadTimeOut();
 
+          $self->producer = new Producer();
+
+          $self->producer->setDriver(  $driver);
+
+ 
+
+
           return $self;
     }
 
@@ -68,6 +77,17 @@ class Consumer {
         $this->callback = $listen;
 
         call_user_func_array([$this->callback,'prepare'],[]);
+
+        $this->producer->setConfig([
+                'default' => [
+                    'queue' => [
+                        'name' =>$this->queue,
+                    ],
+                ]
+          ]);
+
+
+
 
         $this->channel->basic_consume
         (
@@ -144,7 +164,8 @@ class Consumer {
             $res = call_user_func_array([$this->callback,'error'],[ $body_data,$body['config'],$body['message_id'],$e]);
 
             if(empty($res ))
-                $res =  AckStatus::REJECT;
+                $res = AckStatus::BACK_TO_TAIL;
+              //  $res =  AckStatus::REJECT;
         }
 
 
@@ -188,6 +209,17 @@ class Consumer {
             case  AckStatus::RECOVERFALSE://回列 发送给相同的consumer
                 $msg->delivery_info['channel']->basic_recover(false);
                 break;
+            case  AckStatus::BACK_TO_TAIL://重新回到队尾
+            
+                try{
+                    $this->producer->send($msg->getBody());
+                    $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                }catch(Throwable $e){
+                    $msg->delivery_info['channel']->basic_reject($msg->delivery_info['delivery_tag'],true);
+                     $res =  AckStatus::REJECT;
+                }
+                
+                break;    
 
         }
 
