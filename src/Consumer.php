@@ -210,14 +210,25 @@ class Consumer {
                 $msg->delivery_info['channel']->basic_recover(false);
                 break;
             case  AckStatus::BACK_TO_TAIL://重新回到队尾
-            
+
+
                 try{
-                    $this->producer->send($msg->getBody());
-                    $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                }catch(Throwable $e){
+
+
+                    $msg_config = [
+                        'queue' => $this->queue,
+                        'message_id' => $body['message_id'],
+                    ];
+
+                    $this->driver->getPublisher('confirm')->send(new MQMessage($body_data,$msg_config));
+                    $msg->delivery_info['channel']->basic_reject($msg->delivery_info['delivery_tag'],false);
+
+
+                    // $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                 }catch(Throwable $e){
                     $msg->delivery_info['channel']->basic_reject($msg->delivery_info['delivery_tag'],true);
                      $res =  AckStatus::REJECT;
-                }
+                 }
                 
                 break;    
 
